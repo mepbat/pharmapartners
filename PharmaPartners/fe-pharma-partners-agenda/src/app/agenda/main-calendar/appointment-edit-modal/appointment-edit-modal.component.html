@@ -1,0 +1,140 @@
+<div class="around">
+  <form (ngSubmit)="updateAppointment()">
+    <h1>Bewerk Afspraak</h1>
+    <!-- soort afspraak -->
+    <div class="top-box">
+      <div class="left-side">
+        <div class="modal-type ">
+          <h2>Soort afspraak</h2>
+          <br>
+          <div>
+            <mat-select name="type" required [(ngModel)]="appointment.appointmentType.id" class="mat-select-width"
+                        placeholder="Kies hier de soort afspraak">
+              <mat-option [value]="1">Patiënt afspraak</mat-option>
+            </mat-select>
+          </div>
+        </div>
+        <div class="modal-information date-picker">
+          <div style="float:left;">
+            <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+            <mat-datepicker #picker></mat-datepicker>
+          </div>
+          <div class="right-side">
+            <label>
+              <input class="date" name="date"
+                     [ngModel]="appointmentDate" (ngModelChange)="appointmentDate = $event" matInput
+                     [matDatepicker]="picker">
+            </label>
+          </div>
+
+
+          <br>
+          <table class="table">
+            <tbody>
+            <tr>
+              <td>
+                <span class="material-icons">schedule</span>
+              </td>
+              <td>
+                <label for="starttimeHour"><input type="time" class="time" min="00:00" max="23:59"
+                                                  id="starttimeHour"
+                                                  value=" " placeholder="Uur"
+                                                  name="startTime"
+                                                  [ngModel]="startTime"
+                                                  (ngModelChange)="startTime = $event"></label>
+              </td>
+              <td>
+                <label for="endtimeHour"><input type="time" class="time" min="00:00" max="23:59"
+                                                id="endtimeHour"
+                                                name="endTime"
+                                                value="" placeholder="Uur" [ngModel]="endTime"
+                                                (ngModelChange)="endTime = $event"></label>
+              </td>
+            </tr>
+            </tbody>
+          </table>
+
+
+          <br>
+
+        </div>
+        <mat-select name="colorSelection" required class="mat-select-width" [(ngModel)]="selectedColor"
+                    placeholder="kies een kleur" [ngStyle]="{'background-color': selectedColor}">
+          <mat-option *ngFor="let col of colors" [ngStyle]="{'background-color': col.secondary}" [value]="col.secondary"></mat-option>
+        </mat-select>
+      </div>
+
+      <div *ngIf="appointment.patient !== undefined && appointment.patient.location !== undefined && appointment.patient.location !== null" class="modal-patient">
+        <h2><span class="material-icons">search</span>Patiënt zoeken</h2>
+        <label>
+          <input name="patientName" required [(ngModel)]="appointment.patientName"  matInput
+                 class="input-patient"
+                 placeholder="Voor- of achternaam"
+                 (ngModelChange)="onSelectedPatient()"
+                 autocomplete="off"/>
+        </label>
+        <label>
+          <input name="patientStreetNameNumber" required
+                 [(ngModel)]="appointment.patient.location.street" matInput
+                 class="input-patient" placeholder="Straatnaam + huisnummer">
+        </label>
+        <label>
+          <input name="patientDateOfBirth" required [ngModel]="appointment.patient.dateOfBirth | date: 'dd-MM-yyyy'"
+                 matInput
+                 class="input-patient" placeholder="Geboortedatum">
+        </label>
+        <label>
+          <input name="patientPostalCode" required
+                 [(ngModel)]="appointment.patient.location.zipCode"
+                 matInput
+                 class="input-patient" placeholder="Postcode">
+        </label>
+        <div class="found-patients" *ngFor="let patient of patientList" (click)="selectPatient(patient)">{{patient.firstName}}
+          <span
+            *ngIf="patient.middleName !== null && patient.middleName !== undefined">&nbsp;{{patient.middleName}}</span>
+          &nbsp;{{patient.lastName}}
+
+        </div>
+      </div>
+      <br>
+    </div>
+
+    <!--      reden van komst-->
+    <div class="modal-reason box">
+      <h2>Reden van komst</h2>
+      <mat-select name="reasonSelection" required [(ngModel)]="appointment.reasonType.id" class="mat-select-width"
+                  placeholder="Geef de reden van de afspraak aan">
+        <mat-option [value]="1">Ziekte</mat-option>
+        <mat-option [value]="2">Vaste afspraak</mat-option>
+      </mat-select>
+      <br>
+      <label>
+        <textarea name="reasonText" [(ngModel)]="appointment.reason" class="text-area-width"
+                  placeholder="Vul de reden aan met vrije tekst"></textarea>
+      </label>
+    </div>
+
+    <!-- attentie regel-->
+    <div class="modal-attention">
+      <h2>Attentieregel</h2>
+      <label>
+        <input name="attention" disabled="disabled" [ngModel]="appointment.attention">
+      </label>
+    </div>
+    <label for="Prioriteit"></label><input class="left-side checkbox" type="checkbox"
+                                           id="Prioriteit" name="priority"
+                                           [(ngModel)]="appointment.priority">
+    <p><b> Prioriteit</b></p>
+    <label for="MGN"></label><input class="left-side checkbox" type="checkbox" id="MGN"
+                                    [(ngModel)]="appointment.mgn"
+                                    name="mgn">
+    <p><b> Afspraak zichtbaar voor patient (MGn)</b></p>
+
+    <div class="modal-buttons">
+      <button (click)="cancelAppointment()" class="button-cancel" mat-button>Annuleren</button>
+      <button type="submit" class="button-save" mat-button>Opslaan</button>
+    </div>
+
+  </form>
+  <mat-error *ngIf="errorMessage">{{errorMessage}}</mat-error>
+</div>

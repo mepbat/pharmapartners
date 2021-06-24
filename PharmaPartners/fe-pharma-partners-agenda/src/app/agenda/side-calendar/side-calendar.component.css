@@ -1,0 +1,13 @@
+.calendar-wrapper{
+  width: 19vw;
+  text-align: center;
+  height: fit-content;
+}
+.body{
+  margin-top:10vh;
+  background-color: white;
+  border-radius: 5px;
+  padding-left: 2vw;
+  margin-bottom: 9%;;
+}
+
